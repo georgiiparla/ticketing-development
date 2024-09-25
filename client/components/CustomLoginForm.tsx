@@ -6,8 +6,7 @@ import { Button } from '@nextui-org/button'
 import { useState, useEffect } from 'react'
 import { FormEvent } from 'react'
 import { CheckIcon } from '@/config/icons'
-import { useRouter } from 'next/navigation' // Import useRouter
-
+import { useRouter } from 'next/navigation'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 
 interface UserAttrs {
@@ -30,6 +29,7 @@ interface LoggedUserAttrs {
 }
 
 export default function CustomLoginForm() {
+  // console.log(currentUser)
   const router = useRouter()
 
   const [isVisible, setIsVisible] = useState(false)
@@ -175,7 +175,7 @@ export default function CustomLoginForm() {
           startContent={<CheckIcon size={18} width={24} height={24} />}
           variant='faded'
           color='success'
-          className='rounded-lg'
+          className='w-full max-w-xs rounded-lg'
         >
           Signed up successfully! Redirecting...
         </Chip>
