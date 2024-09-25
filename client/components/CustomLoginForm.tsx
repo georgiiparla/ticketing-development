@@ -72,17 +72,8 @@ export default function CustomLoginForm() {
         setErrors(axiosError.response.data.errors)
       } else if (axiosError.request) {
         console.error('No response received:', axiosError.request)
-        setErrors([
-          {
-            message:
-              'Unable to connect to the server. Please check your internet connection and try again.',
-          },
-        ])
       } else {
         console.error('Error:', axiosError.message)
-        setErrors([
-          { message: 'An unexpected error occurred. Please try again later.' },
-        ])
       }
     }
   }
