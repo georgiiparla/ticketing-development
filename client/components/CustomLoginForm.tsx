@@ -54,7 +54,7 @@ export default function CustomLoginForm() {
     event.preventDefault()
 
     try {
-      const response = await axios.post<
+      await axios.post<
         LoggedUserAttrs,
         AxiosResponse<LoggedUserAttrs>,
         UserAttrs
@@ -62,8 +62,6 @@ export default function CustomLoginForm() {
         email,
         password,
       })
-
-      console.log(response.data)
       setErrors([])
       setSignUpStatus(true)
     } catch (error) {

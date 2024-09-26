@@ -20,7 +20,6 @@ export default async function Page() {
   console.log('server side')
   const cookieStore = cookies()
   const session = cookieStore.get('session')
-  console.log(session?.value)
   try {
     const response = await axios.get<
       LoggedUserPayloadAttrs,
