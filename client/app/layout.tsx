@@ -1,37 +1,32 @@
 import '@/styles/globals.css'
 import { fontSans } from '@/config/fonts'
-import NavBar from '@/components/NavBar'
-import axios, { AxiosResponse, AxiosError } from 'axios'
+
 import { cookies } from 'next/headers'
 
-interface CurrentUserResponse {
-  currentUser: {
-    email: string
-    id: string
-    iat: number
-  }
-}
+import axios, { AxiosResponse, AxiosError } from 'axios'
 
-type SerializedErrors = {
-  message: string
-  [key: string]: any
-}[]
+import NavBar from '@/components/NavBar'
 
-interface SerializedErrorsObject {
-  errors: SerializedErrors
-}
+import {
+  CurrentUserResponse,
+  SerializedErrorsObject,
+  CurrentUser,
+  SerializedErrors,
+} from '@/lib/definitions'
 
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  console.log('server side')
   const cookieStore = cookies()
   const session = cookieStore.get('session')
-  let response: AxiosResponse<CurrentUserResponse, any> | null = null
+
+  let currentUser: CurrentUser | null = null
+  let serializedErrors: SerializedErrors | null = null
+
   try {
-    response = await axios.get<
+    const response = await axios.get<
       CurrentUserResponse,
       AxiosResponse<CurrentUserResponse>
     >(
@@ -43,21 +38,23 @@ export default async function RootLayout({
         },
       },
     )
-    console.log(response.data)
+    currentUser = response.data.currentUser
   } catch (error) {
     const axiosError = error as AxiosError<SerializedErrorsObject>
     if (axiosError.response) {
-      console.log(axiosError.response.data.errors)
-    } else if (axiosError.request) {
-      console.error('No response received:', axiosError.request)
+      serializedErrors = axiosError.response.data.errors
     } else {
-      console.error('Error:', axiosError.message)
+      const errorsObject: SerializedErrors = [
+        { message: 'Axios unknown error' },
+      ]
+      serializedErrors = errorsObject
     }
   }
+
   return (
     <html lang='en' className={`${fontSans.className} dark`}>
       <body>
-        <NavBar currentUser={response ? response.data.currentUser : null} />
+        <NavBar currentUser={currentUser} />
         {children}
       </body>
     </html>

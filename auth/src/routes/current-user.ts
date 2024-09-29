@@ -7,7 +7,7 @@ import { checkCurrentUser } from '../middlewares/check-current-user'
 const router = express.Router()
 
 const processRequest = (req: Request, res: Response) => {
-  res.send({ currentUser: req.currentUser || null})
+  res.send({ currentUser: req.currentUser!}) // Always defined because, if  it is not, the error-middleware will be triggered
 }
 
 router.get(

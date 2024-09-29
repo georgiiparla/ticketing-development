@@ -1,37 +1,25 @@
-import { Input } from '@nextui-org/input'
-import { Chip } from '@nextui-org/chip'
-import { EyeFilledIcon } from '@/config/icons'
-import { EyeSlashFilledIcon } from '@/config/icons'
-import { Button } from '@nextui-org/button'
+'use client'
+
 import { useState, useEffect } from 'react'
 import { FormEvent } from 'react'
-import { CheckIcon } from '@/config/icons'
 import { useRouter } from 'next/navigation'
+
+import { Input } from '@nextui-org/input'
+import { Button } from '@nextui-org/button'
+import { Chip } from '@nextui-org/chip'
+
+import { EyeFilledIcon, EyeSlashFilledIcon, CheckIcon } from '@/config/icons'
+
 import axios, { AxiosResponse, AxiosError } from 'axios'
 
-interface UserAttrs {
-  email: string
-  password: string
-}
-
-type SerializedErrors = {
-  message: string
-  [key: string]: any
-}[]
-
-interface SerializedErrorsObject {
-  errors: SerializedErrors
-}
-
-interface LoggedUserAttrs {
-  email: string
-  id: string
-}
+import {
+  SerializedErrors,
+  SerializedErrorsObject,
+  LoggedUserAttrs,
+  UserAttrs,
+} from '@/lib/definitions'
 
 export default function CustomLoginForm() {
-  // console.log(currentUser)
-  const router = useRouter()
-
   const [isVisible, setIsVisible] = useState(false)
   const toggleVisibility = () => setIsVisible(!isVisible)
 
@@ -40,10 +28,12 @@ export default function CustomLoginForm() {
   const [errors, setErrors] = useState<SerializedErrors>([])
   const [isSignedUp, setSignUpStatus] = useState(false)
 
+  const router = useRouter()
   useEffect(() => {
     if (isSignedUp) {
       const timer = setTimeout(() => {
-        router.push('/') // Replace with the actual route
+        router.push('/')
+        router.refresh()
       }, 2000)
 
       return () => clearTimeout(timer) // Clean up the timer on unmount
@@ -68,8 +58,6 @@ export default function CustomLoginForm() {
       const axiosError = error as AxiosError<SerializedErrorsObject>
       if (axiosError.response) {
         setErrors(axiosError.response.data.errors)
-      } else if (axiosError.request) {
-        console.error('No response received:', axiosError.request)
       } else {
         console.error('Error:', axiosError.message)
       }

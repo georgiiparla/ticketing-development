@@ -1,29 +1,32 @@
-import axios, { AxiosResponse, AxiosError } from 'axios'
+import MainWrapper from '@/components/MainWrapper'
+import WrapperFlexCol from '@/components/WrapperFlexCol'
+
 import { cookies } from 'next/headers'
 
-interface LoggedUserPayloadAttrs {
-  email: string
-  id: string
-  iat: number
-}
+import axios, { AxiosResponse, AxiosError } from 'axios'
 
-type SerializedErrors = {
-  message: string
-  [key: string]: any
-}[]
+import {
+  CurrentUserResponse,
+  SerializedErrorsObject,
+  CurrentUser,
+  SerializedErrors,
+} from '@/lib/definitions'
 
-interface SerializedErrorsObject {
-  errors: SerializedErrors
-}
+// export const dynamic = 'force-dynamic'
+// export const revalidate = 0
+// export const fetchCache = 'default-no-store'
 
 export default async function Page() {
-  console.log('server side')
   const cookieStore = cookies()
   const session = cookieStore.get('session')
+
+  let currentUser: CurrentUser | null = null
+  let serializedErrors: SerializedErrors | null = null
+
   try {
     const response = await axios.get<
-      LoggedUserPayloadAttrs,
-      AxiosResponse<LoggedUserPayloadAttrs>
+      CurrentUserResponse,
+      AxiosResponse<CurrentUserResponse>
     >(
       'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/users/currentuser',
       {
@@ -33,17 +36,27 @@ export default async function Page() {
         },
       },
     )
-    console.log(response.data)
+    currentUser = response.data.currentUser
   } catch (error) {
     const axiosError = error as AxiosError<SerializedErrorsObject>
     if (axiosError.response) {
-      console.log(axiosError.response.data.errors)
-    } else if (axiosError.request) {
-      console.error('No response received:', axiosError.request)
+      serializedErrors = axiosError.response.data.errors
     } else {
-      console.error('Error:', axiosError.message)
+      const errorsObject: SerializedErrors = [
+        { message: 'Axios unknown error' },
+      ]
+      serializedErrors = errorsObject
     }
   }
 
-  return <></>
+  return (
+    <MainWrapper>
+      <WrapperFlexCol>
+        <br />
+        {currentUser?.email}
+        <br />
+        {currentUser?.id}
+      </WrapperFlexCol>
+    </MainWrapper>
+  )
 }
