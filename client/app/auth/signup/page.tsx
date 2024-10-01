@@ -7,8 +7,8 @@ import CustomLoginForm from '@/components/CustomLoginForm'
 export default function Page() {
   return (
     <MainWrapper>
-      <TailwindContainer>
-        <WrapperFlexCol>
+      <TailwindContainer className='my-auto'>
+        <WrapperFlexCol className='p-6'>
           <CustomLoginForm />
         </WrapperFlexCol>
       </TailwindContainer>

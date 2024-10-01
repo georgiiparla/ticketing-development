@@ -1,10 +1,12 @@
 export default function WrapperFlexCol({
   children,
+  className
 }: {
-  children: React.ReactNode
+  children: React.ReactNode,
+  className?: string
 }) {
   return (
-    <div className='flex w-full flex-col items-center p-6'>
+    <div className={`flex w-full flex-col items-center ${className}`}>
       {children}
     </div>
   )

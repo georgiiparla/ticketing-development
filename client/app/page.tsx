@@ -1,61 +1,33 @@
 import MainWrapper from '@/components/MainWrapper'
 import WrapperFlexCol from '@/components/WrapperFlexCol'
 
-import { cookies } from 'next/headers'
-
-import axios, { AxiosResponse, AxiosError } from 'axios'
-
-import {
-  CurrentUserResponse,
-  SerializedErrorsObject,
-  CurrentUser,
-  SerializedErrors,
-} from '@/lib/definitions'
+import { extractCurrentUser } from '@/lib/actions'
 
 // export const dynamic = 'force-dynamic'
 // export const revalidate = 0
 // export const fetchCache = 'default-no-store'
 
 export default async function Page() {
-  const cookieStore = cookies()
-  const session = cookieStore.get('session')
+  const response = await extractCurrentUser()
+  let userEmail = null
+  let userId = null
 
-  let currentUser: CurrentUser | null = null
-  let serializedErrors: SerializedErrors | null = null
+  if ('email' in response) {
+    const { email, id } = response
+    userEmail = email
+    userId = id
+  }
 
-  try {
-    const response = await axios.get<
-      CurrentUserResponse,
-      AxiosResponse<CurrentUserResponse>
-    >(
-      'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/users/currentuser',
-      {
-        headers: {
-          Host: 'ticketing.dev',
-          Cookie: `session=${session?.value}`,
-        },
-      },
-    )
-    currentUser = response.data.currentUser
-  } catch (error) {
-    const axiosError = error as AxiosError<SerializedErrorsObject>
-    if (axiosError.response) {
-      serializedErrors = axiosError.response.data.errors
-    } else {
-      const errorsObject: SerializedErrors = [
-        { message: 'Axios unknown error' },
-      ]
-      serializedErrors = errorsObject
-    }
+  if (Array.isArray(response)) {
+    console.error(response)
   }
 
   return (
     <MainWrapper>
       <WrapperFlexCol>
+        {userEmail}
         <br />
-        {currentUser?.email}
-        <br />
-        {currentUser?.id}
+        {userId}
       </WrapperFlexCol>
     </MainWrapper>
   )

@@ -1,7 +1,8 @@
 export default function TailwindContainer({
-  children,
+  children, className
 }: {
-  children: React.ReactNode
+  children: React.ReactNode,
+  className?: string
 }) {
-  return <div className='container mx-auto my-auto'>{children}</div>
+  return <div className={`container mx-auto ${className}`}>{children}</div>
 }
