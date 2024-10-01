@@ -3,20 +3,11 @@ import WrapperFlexCol from '@/components/WrapperFlexCol'
 
 import { extractCurrentUser } from '@/lib/actions'
 
-// export const dynamic = 'force-dynamic'
-// export const revalidate = 0
-// export const fetchCache = 'default-no-store'
-
 export default async function Page() {
   const response = await extractCurrentUser()
-  let userEmail = null
-  let userId = null
 
-  if ('email' in response) {
-    const { email, id } = response
-    userEmail = email
-    userId = id
-  }
+  const currentUserData =
+    'email' in response ? { email: response.email, id: response.id } : null
 
   if (Array.isArray(response)) {
     console.error(response)
@@ -25,9 +16,9 @@ export default async function Page() {
   return (
     <MainWrapper>
       <WrapperFlexCol>
-        {userEmail}
+        {currentUserData?.email}
         <br />
-        {userId}
+        {currentUserData?.id}
       </WrapperFlexCol>
     </MainWrapper>
   )

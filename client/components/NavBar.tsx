@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { CurrentUser } from '@/lib/definitions'
 
 import {
   Navbar,
@@ -15,9 +14,11 @@ import {
 } from '@nextui-org/react'
 
 export default function NavBar({
-  currentUser,
+  email,
+  id,
 }: {
-  currentUser: CurrentUser | null
+  email: string | undefined
+  id: string | undefined
 }) {
   const pathname = usePathname()
 
@@ -31,16 +32,16 @@ export default function NavBar({
         </Link>
       </NavbarBrand>
       <NavbarContent justify='end'>
-        {currentUser ? (
+        {email && id ? (
           <User
-            name={currentUser.email}
+            name={email}
             description={
               <UILink
                 href='https://twitter.com/jrgarciadev'
                 size='sm'
                 isExternal
               >
-                id: {currentUser.id}
+                id: {id}
               </UILink>
             }
             avatarProps={{
