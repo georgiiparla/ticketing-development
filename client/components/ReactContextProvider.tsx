@@ -2,7 +2,7 @@
 
 import { createContext, useContext } from 'react'
 
-const ReactContext = createContext({})
+const ReactContext = createContext<{ email: string; id: string } | null>(null)
 
 const ReactContextProvider = ({
   children,

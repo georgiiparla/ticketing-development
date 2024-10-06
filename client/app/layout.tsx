@@ -3,6 +3,7 @@ import { fontSans } from '@/config/fonts'
 import { extractCurrentUser } from '@/lib/actions'
 
 import NavBar from '@/components/NavBar'
+import Providers from '@/components/Providers'
 
 export default async function RootLayout({
   children,
@@ -21,8 +22,10 @@ export default async function RootLayout({
   return (
     <html lang='en' className={`${fontSans.className} dark`}>
       <body>
-        <NavBar email={currentUserData?.email} id={currentUserData?.id} />
-        {children}
+        <Providers value={currentUserData}>
+          <NavBar />
+          {children}
+        </Providers>
       </body>
     </html>
   )

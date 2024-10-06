@@ -2,6 +2,11 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+
+import { useReactContext } from './ReactContextProvider'
+
+import axios, { AxiosResponse, AxiosError } from 'axios'
 
 import {
   Navbar,
@@ -13,18 +18,28 @@ import {
   Link as UILink,
 } from '@nextui-org/react'
 
-export default function NavBar({
-  email,
-  id,
-}: {
-  email: string | undefined
-  id: string | undefined
-}) {
+export default function NavBar() {
   const pathname = usePathname()
+
+  const userData = useReactContext()
+
+  const router = useRouter()
+
+  async function onSignOut() {
+    try {
+      await axios.post(
+        'https://ticketing.dev/api/users/signout',
+      )
+      router.push('/auth/signup')
+      router.refresh()
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <Navbar
-      className={`${pathname === '/auth/signup' ? 'fixed' : 'sticky'} top-0`}
+      className={`${pathname === '/auth/signup' || '/auth/login'? 'fixed' : 'sticky'} top-0`}
     >
       <NavbarBrand>
         <Link href={'/'}>
@@ -32,26 +47,33 @@ export default function NavBar({
         </Link>
       </NavbarBrand>
       <NavbarContent justify='end'>
-        {email && id ? (
-          <User
-            name={email}
-            description={
-              <UILink
-                href='https://twitter.com/jrgarciadev'
-                size='sm'
-                isExternal
-              >
-                id: {id}
-              </UILink>
-            }
-            avatarProps={{
-              src: 'https://images.unsplash.com/broken',
-            }}
-          />
+        {userData?.email && userData?.id ? (
+          <>
+            <User
+              name={userData.email}
+              description={
+                <UILink
+                  href='https://twitter.com/jrgarciadev'
+                  size='sm'
+                  isExternal
+                >
+                  id: {userData.id}
+                </UILink>
+              }
+              avatarProps={{
+                src: 'https://images.unsplash.com/broken',
+              }}
+            />
+            <NavbarItem>
+              <Button color='danger' variant='flat' onClick={onSignOut}>
+                Sign Out
+              </Button>
+            </NavbarItem>
+          </>
         ) : (
           <>
             <NavbarItem className='flex'>
-              <Link href='#'>Login</Link>
+              <Link href='/auth/login'>Login</Link>
             </NavbarItem>
             <NavbarItem>
               <Button

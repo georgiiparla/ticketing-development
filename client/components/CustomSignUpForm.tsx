@@ -19,7 +19,7 @@ import {
   UserAttrs,
 } from '@/lib/definitions'
 
-export default function CustomLoginForm() {
+export default function CustomSignUpForm() {
   const [isVisible, setIsVisible] = useState(false)
   const toggleVisibility = () => setIsVisible(!isVisible)
 
@@ -48,7 +48,7 @@ export default function CustomLoginForm() {
         LoggedUserAttrs,
         AxiosResponse<LoggedUserAttrs>,
         UserAttrs
-      >('/api/users/signin', {
+      >('/api/users/signup', {
         email,
         password,
       })
@@ -126,7 +126,7 @@ export default function CustomLoginForm() {
 
       {!hasInvalidEmail() &&
         errors?.map((err, index) =>
-          err.field === 'password' || err.field === '' ? (
+          err.field === 'password' ? (
             <Chip
               color='danger'
               key={index}
@@ -139,13 +139,13 @@ export default function CustomLoginForm() {
           ) : null,
         )}
       <Button
-        color='success'
+        color='primary'
         type='submit'
         size='lg'
         className='w-full max-w-xs'
         variant='bordered'
       >
-        Login
+        Sign up
       </Button>
       {isSignedUp ? (
         <Chip
@@ -154,7 +154,7 @@ export default function CustomLoginForm() {
           color='success'
           className='w-full max-w-xs rounded-lg'
         >
-          Signed in successfully! Redirecting...
+          Signed up successfully! Redirecting...
         </Chip>
       ) : null}
     </form>

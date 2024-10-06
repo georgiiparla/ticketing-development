@@ -29,6 +29,7 @@ export async function extractCurrentUser() {
                 },
             },
         )
+        console.log("Request is done")
         currentUser = response.data.currentUser
         return currentUser
     } catch (error) {
