@@ -2,8 +2,8 @@ import express, { Request, Response } from 'express'
 import { body } from 'express-validator'
 import jwt from 'jsonwebtoken'
 
-import { BadRequestError } from '../errors/bad-request-error'
-import { checkValidationErrors } from '../middlewares/check-validation-errors'
+import { BadRequestError } from '@gptickethub/common'
+import { checkValidationErrors } from '@gptickethub/common'
 import { User } from '../models/user'
 
 const validation = [

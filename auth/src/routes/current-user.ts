@@ -1,8 +1,8 @@
 import express from 'express'
 import { Request, Response } from 'express'
 
-import { setCurrentUserIfJwt } from '../middlewares/set-current-user-if-jwt'
-import { checkCurrentUser } from '../middlewares/check-current-user'
+import { setCurrentUserIfJwt } from '@gptickethub/common'
+import { confirmCurrentUser } from '@gptickethub/common'
 
 const router = express.Router()
 
@@ -13,7 +13,7 @@ const processRequest = (req: Request, res: Response) => {
 router.get(
   '/api/users/currentuser',
   setCurrentUserIfJwt,
-  checkCurrentUser,
+  confirmCurrentUser,
   processRequest,
 )
 

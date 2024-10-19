@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 
 import { useReactContext } from './ReactContextProvider'
 
-import axios, { AxiosResponse, AxiosError } from 'axios'
+import axios from 'axios'
 
 import {
   Navbar,
