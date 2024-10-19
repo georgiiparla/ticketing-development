@@ -3,6 +3,8 @@ import 'express-async-errors'
 import { json } from 'body-parser'
 import cookieSession from 'cookie-session'
 
+import { testRouter } from './routes/test'
+
 import { errorHandler } from '@gptickethub/common'
 import { NotFoundError } from '@gptickethub/common'
 
@@ -15,6 +17,8 @@ app.use(
     secure: true,
   }),
 )
+
+app.use(testRouter)
 
 app.all('*', async () => {
   throw new NotFoundError()
